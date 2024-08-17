@@ -1,27 +1,32 @@
-from prompts import backend_generator, frontend_generator, SEO_optimizer
-from SimplerLLM.language.llm import LLM, LLMProvider
+import os
 import requests
+from dotenv import load_dotenv
+from SimplerLLM.language.llm import LLM, LLMProvider
+from prompts import backend_generator_prompt, frontend_generator_prompt
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Setup
 llm_instance = LLM.create(provider=LLMProvider.OPENAI, model_name="gpt-4o-mini")
-tool_description = "AI blog title generator which takes from the user 1 input which is the topic of the blog post and it generates 5 blog title ideas"
-tool_title = "AI Blog Title Generator"
-wordpress_url = "http://new.local"  
-wordpress_username = "husein"  
-application_password = "5hcjDd8tbfUIVHqCBZWz01qT"
-openai_api_key = "sk-proj-LgZbOzpHTPvCdPiabzJQT3BlbkFJeGinsKp3j5WfX7TgpWw8"
+openai_api_key = os.getenv('OPENAI_API_KEY')
+tool_title = "YOUR_TOOL_TITLE"
+tool_description = "YOUR_TOOL_DESCRIPTION"
+wordpress_url = "YOUR_WEBSITE_LINK"  
+wordpress_username = "YOUR_WORDPRESS_USERNAME"  
+application_password = "YOUR_WORDPRESS_APP_PASSWORD"
 
 #Frontend Code Generation
-final_frontend_generator = frontend_generator.format(title = tool_title, tool_info = tool_description)
-frontend_code = llm_instance.generate_response(prompt = final_frontend_generator, max_tokens= 5000)
+final_frontend_generator_prompt = frontend_generator_prompt.format(title = tool_title, tool_info = tool_description)
+frontend_code = llm_instance.generate_response(prompt = final_frontend_generator_prompt, max_tokens= 5000)
 
 with open("frontend_code.html", "w") as w:
     frontend_code = frontend_code.replace("result.innerHTML = marked.parse(data.data.choices.map(choice => choice.message.content).join('\n'));", "result.innerHTML = marked.parse(data.data.choices.map(choice => choice.message.content).join('\\n'));")
     w.write(frontend_code)
 
 #Backend Code Generation
-final_backend_generator = backend_generator.format(title = tool_title, tool_info = tool_description, api_key = openai_api_key)
-backend_code = llm_instance.generate_response(prompt = final_backend_generator, max_tokens= 5000)
+final_backend_generator_prompt = backend_generator_prompt.format(title = tool_title, tool_info = tool_description, api_key = openai_api_key)
+backend_code = llm_instance.generate_response(prompt = final_backend_generator_prompt, max_tokens= 5000)
 
 with open("backend_code.php", "w") as w:
     w.write(backend_code)
