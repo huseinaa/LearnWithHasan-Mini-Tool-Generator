@@ -1,11 +1,16 @@
+import os
+from dotenv import load_dotenv
 from SimplerLLM.language.llm import LLM, LLMProvider
 from prompts import backend_generator, frontend_generator, SEO_optimizer
+
+# Load environment variables from .env file
+load_dotenv()
 
 #Inputs
 llm_instance = LLM.create(provider=LLMProvider.OPENAI, model_name="gpt-4o-mini")
 tool_description = "AI X Bio Generator tool which takes 3 inputs which are the users achievements what skills they have and the target audience and generates a x bio for them"
 tool_title = "AI X Bio Generator"
-openai_api_key = "sk-proj-LgZbOzpHTPvCdPiabzJQT3BlbkFJeGinsKp3j5WfX7TgpWw8"
+openai_api_key = os.getenv('OPENAI_API_KEY')
 
 #Frontend
 final_frontend_generator = frontend_generator.format(title = tool_title, tool_info = tool_description)
