@@ -42,12 +42,14 @@ st.title("Mini Tool Generator")
 st.subheader("Enter the necessary information to create your tool:")
 
 # User inputs for configuration
-tool_title = st.text_input("Enter the title of the tool:")
-tool_description = st.text_area("Enter the description of the tool:")
-wordpress_url = st.text_input("WordPress URL:")
-wordpress_username = st.text_input("WordPress Username:")
-application_password = st.text_input("Application Password:", type="password")
-openai_api_key = st.text_input("OpenAI API Key:", type="password")
+tool_title = st.text_input("Enter the title of the tool:", "AI Blog Title Generator")
+tool_description = st.text_area("Enter the description of the tool:", 
+                                "AI blog title generator which takes from the user 1 input which is the topic of the blog post and it generates 5 blog title ideas")
+wordpress_url = st.text_input("WordPress URL:", "http://new.local")
+wordpress_username = st.text_input("WordPress Username:", "husein")
+application_password = st.text_input("Application Password:", "5hcjDd8tbfUIVHqCBZWz01qT", type="password")
+openai_api_key = st.text_input("OpenAI API Key:", "sk-proj-LgZbOzpHTPvCdPiabzJQT3BlbkFJeGinsKp3j5WfX7TgpWw8", type="password")
+
 
 # Generate tool codes
 if st.button('Generate Tool Codes'):
