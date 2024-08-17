@@ -1,6 +1,5 @@
-# Import necessary libraries
 import streamlit as st
-from prompts import backend_generator, frontend_generator, SEO_optimizer
+from prompts import backend_generator_prompt, frontend_generator_prompt
 from SimplerLLM.language.llm import LLM, LLMProvider
 import requests
 
@@ -40,31 +39,31 @@ def create_code_snippet(url, username, app_password, snippet_details):
 
 # Setting up the Streamlit UI
 st.title("Mini Tool Generator")
-st.subheader("Enter the necessary information to configure the tool:")
+st.subheader("Enter the necessary information to create your tool:")
 
 # User inputs for configuration
-tool_title = st.text_input("Enter the title of the tool:", "AI Blog Title Generator")
-tool_description = st.text_area("Enter the description of the tool:", 
-                                "AI blog title generator which takes from the user 1 input which is the topic of the blog post and it generates 5 blog title ideas")
-wordpress_url = st.text_input("WordPress URL:", "http://new.local")
-wordpress_username = st.text_input("WordPress Username:", "husein")
-application_password = st.text_input("Application Password:", "5hcjDd8tbfUIVHqCBZWz01qT", type="password")
-openai_api_key = st.text_input("OpenAI API Key:", "sk-proj-LgZbOzpHTPvCdPiabzJQT3BlbkFJeGinsKp3j5WfX7TgpWw8", type="password")
+tool_title = st.text_input("Enter the title of the tool:")
+tool_description = st.text_area("Enter the description of the tool:")
+wordpress_url = st.text_input("WordPress URL:")
+wordpress_username = st.text_input("WordPress Username:")
+application_password = st.text_input("Application Password:", type="password")
+openai_api_key = st.text_input("OpenAI API Key:", type="password")
 
-# Button to generate tool codes
+# Generate tool codes
 if st.button('Generate Tool Codes'):
     st.session_state['generated'] = True  # Flag to check if codes were generated
     # Generate codes using the provided script
-    final_frontend_generator = frontend_generator.format(title=tool_title, tool_info=tool_description)
-    frontend_code = llm_instance.generate_response(prompt=final_frontend_generator, max_tokens=5000)
+    final_frontend_generator_prompt = frontend_generator_prompt.format(title=tool_title, tool_info=tool_description)
+    frontend_code = llm_instance.generate_response(prompt=final_frontend_generator_prompt, max_tokens=5000)
     frontend_code = frontend_code.replace("result.innerHTML = marked.parse(data.data.choices.map(choice => choice.message.content).join('\n'));", "result.innerHTML = marked.parse(data.data.choices.map(choice => choice.message.content).join('\\n'));")
     
-    final_backend_generator = backend_generator.format(title=tool_title, tool_info=tool_description, api_key=openai_api_key)
-    backend_code = llm_instance.generate_response(prompt=final_backend_generator, max_tokens=5000)
+    final_backend_generator_prompt = backend_generator_prompt.format(title=tool_title, tool_info=tool_description, api_key=openai_api_key)
+    backend_code = llm_instance.generate_response(prompt=final_backend_generator_prompt, max_tokens=5000)
     
     st.session_state['frontend_code'] = frontend_code
     st.session_state['backend_code'] = backend_code
 
+# Publish Tool
 if 'generated' in st.session_state and st.session_state['generated']:
     st.success("Tool Codes Generated Successfully!")
     col1, col2 = st.columns(2)
@@ -76,7 +75,7 @@ if 'generated' in st.session_state and st.session_state['generated']:
         st.subheader("Backend Code")
         st.download_button("Download Backend Code", st.session_state['backend_code'], file_name="backend_code.php")
     
-    # Ask user if they want to publish the tool
+    # Checks if you want to publish the tool
     publish = st.radio("Do you want to publish this tool to your site?", ('Yes', 'No'))
     
     if publish == 'Yes' and st.button("Publish Tool to Your Site"):
