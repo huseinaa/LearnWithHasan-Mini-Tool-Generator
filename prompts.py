@@ -1,4 +1,4 @@
-frontend_generator = """
+frontend_generator_prompt = """
 As an expert in HTML, CSS, and JavaScript Programming, your task is to create a UI for a tool whose functionality and number of inputs will be provided in the inputs section delimited between triple backticks.
 The UI should have a simple and clean design, following the code structure for a tool that takes 2 inputs in the Sample Output section delimited between triple backticks.
 The most important thing is that the output code should only focus on editing the base code to make it compatible with the new number and type of inputs the user wants. 
@@ -236,7 +236,7 @@ Tool Information: ```{tool_info}```
 The output should be the code but in normal text form dont use triple backticks to make it in code form and only that.
 """
 
-backend_generator = """
+backend_generator_prompt = """
 You are an expert in generating php code snippets for wordpress. Your task is to generate a php code snippet about the code idea that will be provided in the inputs section delimited between triple backticks.
 The php code snippet should be clear following the code structure for the backend of a tool that takes 2 inputs delimited between triple backticks in the Sample Output section.
 The most important thing is that the output code should only focus on editing the base code to make it compatible with the new number and type of inputs the user wants. 
