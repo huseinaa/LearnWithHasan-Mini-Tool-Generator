@@ -31,6 +31,7 @@ backend_code = llm_instance.generate_response(prompt = final_backend_generator_p
 with open("backend_code.php", "w") as w:
     w.write(backend_code)
 
+# Define the functions for creating WordPress pages and inserting snippets
 def create_wordpress_page(title, html_content, url, username, app_password):
     headers = {
         'Authorization': f'Basic {username}:{app_password}'
