@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from SimplerLLM.language.llm import LLM, LLMProvider
-from prompts import backend_generator, frontend_generator, SEO_optimizer
+from prompts import backend_generator_prompt, frontend_generator_prompt
 
 # Load environment variables from .env file
 load_dotenv()
@@ -13,19 +13,20 @@ tool_title = "AI X Bio Generator"
 openai_api_key = os.getenv('OPENAI_API_KEY')
 
 #Frontend
-final_frontend_generator = frontend_generator.format(title = tool_title, tool_info = tool_description)
-frontend_code = llm_instance.generate_response(prompt = final_frontend_generator, max_tokens= 5000)
+final_frontend_generator_prompt = frontend_generator_prompt.format(title = tool_title, tool_info = tool_description)
+frontend_code = llm_instance.generate_response(prompt = final_frontend_generator_prompt, max_tokens= 5000)
 
 with open("frontend_code.html", "w") as w:
     frontend_code = frontend_code.replace("result.innerHTML = marked.parse(data.data.choices.map(choice => choice.message.content).join('\n'));", "result.innerHTML = marked.parse(data.data.choices.map(choice => choice.message.content).join('\\n'));")
     w.write(frontend_code) 
 
 #Backend
-final_backend_generator = backend_generator.format(title = tool_title, tool_info = tool_description, api_key = openai_api_key)
-backend_code = llm_instance.generate_response(prompt = final_backend_generator, max_tokens= 5000)
+final_backend_generator_prompt = backend_generator_prompt.format(title = tool_title, tool_info = tool_description, api_key = openai_api_key)
+backend_code = llm_instance.generate_response(prompt = final_backend_generator_prompt, max_tokens= 5000)
 
 with open("backend_code.php", "w") as w:
     w.write(backend_code)
+
 """
 #SEO
 final_SEO_optimizer = SEO_optimizer.format(title = tool_title, description = tool_description)
